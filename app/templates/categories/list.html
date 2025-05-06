@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Categories - Financial Tracker{% endblock %}
+
+{% block content %}
+<div class="categories-page">
+    <div class="page-header">
+        <h2>Categories</h2>
+        <a href="/categories/new" class="btn btn-primary">Add Category</a>
+    </div>
+    
+    {% if categories %}
+        <div class="categories-grid">
+            {% for category in categories %}
+                <div class="category-card" id="category-{{ category.id }}">
+                    <div class="category-card-header">
+                        <h3>{{ category.name }}</h3>
+                        <div class="category-actions">
+                            <a href="/categories/{{ category.id }}" class="btn btn-small">View</a>
+                            <button class="btn btn-small btn-danger"
+                                    hx-delete="/categories/{{ category.id }}"
+                                    hx-confirm="Are you sure you want to delete this category? This may affect associated transactions.">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="category-card-body">
+                        {% if category.description %}
+                            <p class="category-description">{{ category.description }}</p>
+                        {% else %}
+                            <p class="category-description text-muted">No description</p>
+                        {% endif %}
+                        <p class="category-count">
+                            <strong>{{ category.transaction_count }}</strong> 
+                            transaction{{ category.transaction_count|pluralize }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No categories found. <a href="/categories/new">Add one</a>?</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

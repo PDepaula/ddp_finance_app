@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Category Details - Financial Tracker{% endblock %}
+
+{% block content %}
+<div class="category-detail-page">
+    <div class="page-header">
+        <h2>Category Details</h2>
+        <div class="header-actions">
+            <a href="/categories/" class="btn">Back to Categories</a>
+            <button class="btn btn-danger"
+                    hx-delete="/categories/{{ category.id }}"
+                    hx-confirm="Are you sure you want to delete this category? This may affect associated transactions.">
+                Delete Category
+            </button>
+        </div>
+    </div>
+    
+    <div class="detail-card">
+        <div class="detail-header">
+            <h3>{{ category.name }}</h3>
+        </div>
+        
+        <div class="detail-content">
+            <dl class="detail-list">
+                <dt>Name:</dt>
+                <dd>{{ category.name }}</dd>
+                
+                <dt>Description:</dt>
+                <dd>{{ category.description or "No description provided" }}</dd>
+                
+                <dt>Created:</dt>
+                <dd>{{ category.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <div class="edit-section">
+        <h3>Edit Category</h3>
+        <form hx-put="/api/categories/{{ category.id }}" hx-swap="none" hx-redirect="/categories/{{ category.id }}">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ category.name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="3">{{ category.description or '' }}</textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Category</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

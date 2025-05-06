@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction Details - Financial Tracker{% endblock %}
+
+{% block content %}
+<div class="transaction-detail-page">
+    <div class="page-header">
+        <h2>Transaction Details</h2>
+        <div class="header-actions">
+            <a href="/transactions/" class="btn">Back to Transactions</a>
+            <button class="btn btn-danger"
+                    hx-delete="/transactions/{{ transaction.id }}"
+                    hx-confirm="Are you sure you want to delete this transaction?">
+                Delete Transaction
+            </button>
+        </div>
+    </div>
+    
+    <div class="detail-card">
+        <div class="detail-header">
+            <h3>
+                {{ transaction.description or "No description" }}
+                <span class="transaction-amount {% if transaction.amount >= 0 %}income{% else %}expense{% endif %}">
+                    ${{ "%.2f"|format(transaction.amount) }}
+                </span>
+            </h3>
+        </div>
+        
+        <div class="detail-content">
+            <dl class="detail-list">
+                <dt>Amount:</dt>
+                <dd class="{% if transaction.amount >= 0 %}income{% else %}expense{% endif %}">
+                    ${{ "%.2f"|format(transaction.amount) }}
+                </dd>
+                
+                <dt>Date:</dt>
+                <dd>{{ transaction.date.strftime('%Y-%m-%d') }}</dd>
+                
+                <dt>Category:</dt>
+                <dd>{{ transaction.category.name if transaction.category else "Uncategorized" }}</dd>
+                
+                <dt>Description:</dt>
+                <dd>{{ transaction.description or "No description provided" }}</dd>
+                
+                <dt>Created:</dt>
+                <dd>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <div class="edit-section">
+        <h3>Edit Transaction</h3>
+        <form hx-put="/api/transactions/{{ transaction.id }}" hx-swap="none" hx-redirect="/transactions/{{ transaction.id }}">
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" step="0.01" value="{{ transaction.amount }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" value="{{ transaction.description or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" value="{{ transaction.date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category_id">Category:</label>
+                <select id="category_id" name="category_id">
+                    <option value="">Uncategorized</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if transaction.category_id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Transaction</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

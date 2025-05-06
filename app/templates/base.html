@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Financial Tracker{% endblock %}</title>
+    
+    <!-- Include HTMX for interactive UI -->
+    <script src="/static/js/htmx.min.js"></script>
+    
+    <!-- Simple CSS for styling -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Financial Tracker</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/transactions/">Transactions</a></li>
+                    <li><a href="/categories/">Categories</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">            
+            <p>&copy; {{ current_year() }} Financial Tracker. Built with FastAPI, SQLAlchemy Core, and HTMX.</p>
+        </div>
+    </footer>
+</body>
+</html>
